@@ -8,9 +8,9 @@ Since there are a lot of `Plotly` plots involved, it is recommended that we acce
 
 1. 2D Stochastic Processes
 
-   1.1. <a href="https://kalaapks.github.io/radonika_theory-dev/01_2D_Stochastic_processes/2D_Stochatsic_paths.html" target="_blank" rel="noopener noreferrer">1D Processes using `stochastics`</a>
+   1.1. [1D Processes using `stochastics`](https://kalaapks.github.io/radonika_theory-dev/01_2D_Stochastic_processes/2D_Stochatsic_paths.html)
 
-   1.2. <a href="https://kalaapks.github.io/radonika_theory-dev/01_2D_Stochastic_processes/Introduction_to_Plotly.html" target="_blank" rel="noopener noreferrer">Introduction to `Plotly`</a>
+   1.2. [Introduction to `Plotly`](https://kalaapks.github.io/radonika_theory-dev/01_2D_Stochastic_processes/Introduction_to_Plotly.html)
 
 3. Developing the library `radonika`
 
