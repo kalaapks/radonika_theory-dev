@@ -1,38 +1,52 @@
-   name: Build notes site
-   on:
-     push:
-       branches: [main]
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v4
-         - uses: actions/setup-python@v5
-           with:
-             python-version: "3.12"
-         - run: pip install nbconvert
-         - name: Convert notebooks to HTML
-           run: |
-             mkdir site
-             find . -name "*.ipynb" -not -path "./site/*" -not -path "*/.ipynb_checkpoints/*" | while read f; do
-               mkdir -p "site/$(dirname "$f")"
-               jupyter nbconvert --to html "$f" --output-dir "site/$(dirname "$f")"
-             done
-             echo "<h1>My Notes</h1>" > site/index.html
-             find site -name "*.html" ! -name "index.html" | sort | sed 's|site/||' | while read p; do
-               echo "<p><a href=\"$p\">$p</a></p>" >> site/index.html
-             done
-         - uses: actions/upload-pages-artifact@v3
-           with:
-             path: site
-     deploy:
-       needs: build
-       runs-on: ubuntu-latest
-       environment:
-         name: github-pages
-       steps:
-         - uses: actions/deploy-pages@v4
+name: Build notes site
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install nbconvert
+      - name: Convert notebooks to HTML
+        run: |
+          mkdir site
+          find . -name "*.ipynb" -not -path "./site/*" -not -path "*/.ipynb_checkpoints/*" | while read f; do
+            mkdir -p "site/$(dirname "$f")"
+            jupyter nbconvert --to html "$f" --output-dir "site/$(dirname "$f")"
+          done
+          echo "<h1>My Notes</h1>" > site/index.html
+          find site -name "*.html" ! -name "index.html" | sort | sed 's|site/||' | while read p; do
+            echo "<p><a href=\"$p\">$p</a></p>" >> site/index.html
+          done
+      - name: Make code cells scroll sideways on phones
+        run: |
+          python - <<'EOF'
+          import pathlib
+          css = """<style>
+          .jp-InputArea{display:flex !important}
+          .jp-InputArea-editor{display:block !important;flex:1 1 0;min-width:0;overflow-x:auto !important;-webkit-overflow-scrolling:touch}
+          .jp-OutputArea-output pre,.jp-RenderedText pre{overflow-x:auto}
+          </style></head>"""
+          for p in pathlib.Path("site").rglob("*.html"):
+              if p.name == "index.html":
+                  continue
+              p.write_text(p.read_text(encoding="utf-8").replace("</head>", css, 1), encoding="utf-8")
+          EOF
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/deploy-pages@v4
