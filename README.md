@@ -11,7 +11,7 @@ There is a hyper-linked content below but before that I have added a few plots t
 </p>
 
 <p align="center">
-  <img src="images/reweight_bm.gif" alt="Drift_removal" title="" width="650" height="260">
+  <img src="images/reweight_bm.gif" alt="Drift_removal" title="" width="650" height="300">
   <br>
   <b>In Financial modelling, Esscher's tilt is used to remove drift by reweighting the individual paths based on the abstract theory of Radon-Nikodym derivative</b>
 </p>
